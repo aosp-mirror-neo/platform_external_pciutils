@@ -1,0 +1,110 @@
+package {
+    default_applicable_licenses: ["external_pciutils_license"],
+}
+
+license {
+    name: "external_pciutils_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-GPL-2.0",
+    ],
+    license_text: [
+        "COPYING",
+        "LICENSE",
+    ],
+}
+
+cc_genrule {
+    name: "libpci_config",
+    out: ["config.h"],
+    srcs: ["Makefile"],
+    host_supported: true,
+    cmd: "echo >$(out) '#define PCI_CONFIG_H'\n" +
+        "echo >>$(out) \"#define PCI_ARCH_`echo $${CC_ARCH} | tr '[a-z]' '[A-Z]'`\"\n" +
+        "echo >>$(out) '#define PCI_OS_LINUX'\n" +
+        "echo >>$(out) '#define PCI_HAVE_PM_LINUX_SYSFS'\n" +
+        "echo >>$(out) '#define PCI_HAVE_PM_LINUX_PROC'\n" +
+        "echo >>$(out) '#define PCI_HAVE_PM_MMIO_CONF'\n" +
+        "echo >>$(out) '#define PCI_HAVE_PM_ECAM'\n" +
+        "echo >>$(out) '#define PCI_HAVE_LINUX_BYTEORDER_H'\n" +
+        "echo >>$(out) '#define PCI_PATH_PROC_BUS_PCI \"/proc/bus/pci\"'\n" +
+        "echo >>$(out) '#define PCI_PATH_SYS_BUS_PCI \"/sys/bus/pci\"'\n" +
+        "echo >>$(out) '#define PCI_PATH_DEVMEM_DEVICE \"/dev/mem\"'\n" +
+        "echo >>$(out) '#define PCI_PATH_ACPI_MCFG \"/sys/firmware/acpi/tables/MCFG\"'\n" +
+        "echo >>$(out) '#define PCI_PATH_EFI_SYSTAB \"/sys/firmware/efi/systab\"'\n" +
+        "( [ \"$${CC_ARCH}\" == 'x86_64' ] && echo >>$(out) '#define PCI_HAVE_PM_INTEL_CONF' )\n" +
+        "echo >>$(out) '#define PCI_HAVE_64BIT_ADDRESS'\n" +
+        "echo >>$(out) '#define PCI_HAVE_PM_DUMP'\n" +
+        "echo >>$(out) '#define PCI_COMPRESSED_IDS'\n" + // ZLib
+        "echo >>$(out) '#define PCI_IDS \"pci.ids.gz\"'\n" +
+        "echo >>$(out) '#define PCI_PATH_IDS_DIR \"\"'\n" +
+        "echo >>$(out) '#define PCI_USE_LIBKMOD'\n" +
+        "echo >>$(out) \"#define PCILIB_VERSION \\\"`sed -nE 's/^VERSION=(\\S*)/\\1/p' $(in)`\\\"\"",
+}
+
+cc_genrule {
+    name: "libpci_includes",
+    host_supported: true,
+    srcs: [
+        ":libpci_config",
+        "lib/header.h",
+        "lib/pci.h",
+        "lib/types.h",
+    ],
+    out: [
+        "pciutils/config.h",
+        "pciutils/header.h",
+        "pciutils/pci.h",
+        "pciutils/types.h",
+    ],
+    cmd: "mkdir -p $(genDir)/pciutils && cp $(in) $(genDir)/pciutils/",
+}
+
+cc_library_static {
+    name: "libpci",
+    host_supported: true,
+    visibility: ["//external/flashrom"],
+
+    cflags: [
+        "-O2",
+        "-Wall",
+        "-W",
+        "-Wno-parentheses",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+    ],
+
+    srcs: [
+        "lib/init.c",
+        "lib/access.c",
+        "lib/generic.c",
+        "lib/dump.c",
+        "lib/names.c",
+        "lib/filter.c",
+        "lib/names-hash.c",
+        "lib/names-parse.c",
+        "lib/names-net.c",
+        "lib/names-cache.c",
+        "lib/names-hwdb.c",
+        "lib/params.c",
+        "lib/caps.c",
+        "lib/sysfs.c",
+        "lib/proc.c",
+        "lib/i386-ports.c",
+        "lib/mmio-ports.c",
+        "lib/ecam.c",
+        "lib/physmem-posix.c",
+    ],
+
+    generated_headers: [
+        "libpci_config",
+        "libpci_includes",
+    ],
+
+    export_generated_headers: ["libpci_includes"],
+
+    static_libs: [
+        "libkmod",
+        "libz",
+    ],
+}
