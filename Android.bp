@@ -90,11 +90,19 @@ cc_library_static {
         "lib/caps.c",
         "lib/sysfs.c",
         "lib/proc.c",
-        "lib/i386-ports.c",
         "lib/mmio-ports.c",
         "lib/ecam.c",
         "lib/physmem-posix.c",
     ],
+
+    arch: {
+        x86: {
+            srcs: ["lib/i386-ports.c"],
+        },
+        x86_64: {
+            srcs: ["lib/i386-ports.c"],
+        },
+    },
 
     generated_headers: [
         "libpci_config",
