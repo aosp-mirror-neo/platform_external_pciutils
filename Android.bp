@@ -32,7 +32,7 @@ cc_genrule {
         "echo >>$(out) '#define PCI_PATH_DEVMEM_DEVICE \"/dev/mem\"'\n" +
         "echo >>$(out) '#define PCI_PATH_ACPI_MCFG \"/sys/firmware/acpi/tables/MCFG\"'\n" +
         "echo >>$(out) '#define PCI_PATH_EFI_SYSTAB \"/sys/firmware/efi/systab\"'\n" +
-        "( [ \"$${CC_ARCH}\" == x86* ] && echo >>$(out) '#define PCI_HAVE_PM_INTEL_CONF' )\n" +
+        "( [ \"$${CC_ARCH}\" == 'x86_64' ] && echo >>$(out) '#define PCI_HAVE_PM_INTEL_CONF' )\n" +
         "echo >>$(out) '#define PCI_HAVE_64BIT_ADDRESS'\n" +
         "echo >>$(out) '#define PCI_HAVE_PM_DUMP'\n" +
         "echo >>$(out) '#define PCI_COMPRESSED_IDS'\n" + // ZLib
@@ -97,14 +97,10 @@ cc_library_static {
 
     arch: {
         x86: {
-            srcs: [
-                "lib/i386-ports.c",
-            ],
+            srcs: ["lib/i386-ports.c"],
         },
         x86_64: {
-            srcs: [
-                "lib/i386-ports.c",
-            ],
+            srcs: ["lib/i386-ports.c"],
         },
     },
 
