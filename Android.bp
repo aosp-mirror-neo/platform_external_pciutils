@@ -19,6 +19,7 @@ cc_genrule {
     out: ["config.h"],
     srcs: ["Makefile"],
     host_supported: true,
+    vendor_available: true,
     cmd: "echo >$(out) '#define PCI_CONFIG_H'\n" +
         "echo >>$(out) \"#define PCI_ARCH_`echo $${CC_ARCH} | tr '[a-z]' '[A-Z]'`\"\n" +
         "echo >>$(out) '#define PCI_OS_LINUX'\n" +
@@ -45,6 +46,7 @@ cc_genrule {
 cc_genrule {
     name: "libpci_includes",
     host_supported: true,
+    vendor_available: true,
     srcs: [
         ":libpci_config",
         "lib/header.h",
@@ -63,6 +65,7 @@ cc_genrule {
 cc_library_static {
     name: "libpci",
     host_supported: true,
+    vendor_available: true,
     visibility: ["//external/flashrom"],
 
     cflags: [
