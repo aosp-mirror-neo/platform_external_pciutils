@@ -75,10 +75,7 @@ cc_library_static {
     name: "libpci",
     host_supported: true,
     vendor_available: true,
-    visibility: [
-        "//external/flashrom",
-        "//external/flashrom/bindings/rust/libflashrom",
-    ],
+    visibility: ["//external/flashrom"],
 
     cflags: pciutils_cflags,
 
