@@ -20,6 +20,7 @@ cc_genrule {
     srcs: ["Makefile"],
     host_supported: true,
     vendor_available: true,
+    recovery_available: true,
     cmd: "echo >$(out) '#define PCI_CONFIG_H'\n" +
         "echo >>$(out) \"#define PCI_ARCH_`echo $${CC_ARCH} | tr '[a-z]' '[A-Z]'`\"\n" +
         "echo >>$(out) '#define PCI_OS_LINUX'\n" +
@@ -47,6 +48,7 @@ cc_genrule {
     name: "libpci_includes",
     host_supported: true,
     vendor_available: true,
+    recovery_available: true,
     srcs: [
         ":libpci_config",
         "lib/header.h",
@@ -75,6 +77,7 @@ cc_library_static {
     name: "libpci",
     host_supported: true,
     vendor_available: true,
+    recovery_available: true,
     visibility: [
         "//external/flashrom",
         "//external/flashrom/bindings/rust/libflashrom",
