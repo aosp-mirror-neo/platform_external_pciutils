@@ -130,6 +130,7 @@ cc_library_static {
 
 cc_binary {
     name: "lspci_pciutils",
+    symlinks: ["pclspci"],
     vendor: true,
 
     cflags: pciutils_cflags,
