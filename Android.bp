@@ -151,3 +151,26 @@ cc_binary {
         "libpci_includes",
     ],
 }
+
+cc_binary {
+    name: "setpci",
+    vendor: true,
+
+    cflags: pciutils_cflags,
+
+    srcs: [
+        "setpci.c",
+        "common.c",
+    ],
+
+    static_libs: [
+        "libkmod",
+        "libpci",
+        "libz",
+    ],
+
+    generated_headers: [
+        "libpci_config",
+        "libpci_includes",
+    ],
+}
