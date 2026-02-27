@@ -85,6 +85,7 @@ cc_library_static {
     visibility: [
         "//external/flashrom",
         "//external/flashrom/bindings/rust/libflashrom",
+        "//external/igt-gpu-tools",
         "//external/igt-gpu-tools:__subpackages__",
     ],
 
