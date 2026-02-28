@@ -60,8 +60,12 @@ cc_genrule {
         "pciutils/header.h",
         "pciutils/pci.h",
         "pciutils/types.h",
+        "pci/config.h",
+        "pci/header.h",
+        "pci/pci.h",
+        "pci/types.h",
     ],
-    cmd: "mkdir -p $(genDir)/pciutils && cp $(in) $(genDir)/pciutils/",
+    cmd: "mkdir -p $(genDir)/pciutils && cp $(in) $(genDir)/pciutils/ && mkdir -p $(genDir)/pci && cp $(in) $(genDir)/pci/",
 }
 
 pciutils_cflags = [
@@ -81,6 +85,8 @@ cc_library_static {
     visibility: [
         "//external/flashrom",
         "//external/flashrom/bindings/rust/libflashrom",
+        "//external/igt-gpu-tools",
+        "//external/igt-gpu-tools:__subpackages__",
     ],
 
     cflags: pciutils_cflags,
